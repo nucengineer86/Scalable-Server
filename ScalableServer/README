@@ -1,0 +1,44 @@
+Below is a list and description of the packages and classes included in this assignment:
+
+cs455.scaling.client package:
+Client - This class represents an instance of a Client and its associated responsibilities, such as:
+- opening up a SocketChannel to the Server.
+- generating and sending 8kB payloads to the Server.
+- writing throughput statistics every 20 seconds containing the number of messages sent and received.
+ClientReceiver - This class is structured to continuously read data sent from the Server. In doing so, 
+it verifies that the hashes sent from the Server match with the hashes originally sent by the Client.
+
+cs455.scaling.server package:
+Server - This class represents a Singleton instance of a Server object which is designed to perform the following:
+- Establishes a ServerSocketChannel whereby Clients can communicate to.
+- Contiuously monitors the system for new connections.
+- Registers new Clients.
+- Instantiate the ThreadPoolManager to initialize worker threads
+- Send data back to Client
+
+cs455.scaling.task package:
+Task - This is an interface which represents a generic Task object which is to be executed by the worker threads 
+in the thread pool.
+IncomingTrafficTask - This class is responsible for reading incoming Client data, recomputing the SHA-1 hash, and 
+creating a batch from the Client SocketChannel and SHA-1 hash. 
+OutgoingTrafficTask - This class is responsible for delegating the sending of re-computed hashes back to the respective
+Clients.
+
+cs455.scaling.threadpool package:
+ThreadPoolManager - This class is responsible for creating a fixed number of threads to form a thread pool. This thread 
+pool is comprised of worker threads whose job is to execute individual Tasks as they become available. 
+
+cs455.scaling.util package:
+HashGenerator - This is a utility class designed to compute the SHA-1 hash for a given payload. 
+
+Running the program:
+When running this, you'll want to first set up the Server by executing: cs455.scaling.server.Server <portNumber> <threadPoolSize> <batchSize> <batchTime>
+Note: The Server class expects that all of these command-line arguments are positive values and greater than 0. 
+
+After starting the Server, you can initialize a Client connection using: cs455.scaling.client.Client <portNumber> <throughputFactor>
+Note: The throughputFactor is expected to be a positive value and greater than 0. The client code has only been tested to use 
+values in the range of 2-4 as specified in the HW2 description. 
+
+build.gradle:
+The build.gradle file included in this project has a reference to the executable jar file (Server.jar) which lives within the 
+/libs directory 
